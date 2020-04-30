@@ -25,7 +25,7 @@ namespace addWhiteSpace2
 
             if(open.ShowDialog() == DialogResult.OK)
             {
-                pictureBox1.ImageLocation = open.FileName;
+               // pictureBox1.ImageLocation = open.FileName;
             }
         }
 
@@ -34,19 +34,19 @@ namespace addWhiteSpace2
             //Bitmap originalImage = new Bitmap(40, 40);
             //using (Graphics g = Graphics.FromImage(originalImage)) { g.Clear(Color.White); }
 
-            Bitmap originalImage = new Bitmap(pictureBox1.Image);
+           // Bitmap originalImage = new Bitmap(pictureBox1.Image);
 
             Bitmap newImage = new Bitmap(400, 511);
             using (Graphics graphics = Graphics.FromImage(newImage))
             {
                 graphics.Clear(Color.White);
-                int x = (newImage.Width - originalImage.Width) / 2;
-                int y = (newImage.Height - originalImage.Height) ;
+               // int x = (newImage.Width - originalImage.Width) / 2;
+                //int y = (newImage.Height - originalImage.Height) ;
 
                // originalImage = new Bitmap(originalImage.Width, newImage.Height);
-                graphics.DrawImage(originalImage, x, y);
+               // graphics.DrawImage(originalImage, x, y);
             }
-            pictureBox2.Image = newImage;
+            //pictureBox2.Image = newImage;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -56,7 +56,7 @@ namespace addWhiteSpace2
 
         private void button4_Click(object sender, EventArgs e)
         {
-            pictureBox2.Image.Save(@"C:\Users\Jens\Desktop\temp\wijnen\test.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+           // pictureBox2.Image.Save(@"C:\Users\Jens\Desktop\temp\wijnen\test.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
 
         }
 
@@ -67,7 +67,7 @@ namespace addWhiteSpace2
             if (open.ShowDialog() == DialogResult.OK)
             {
                 var imageLoaded = open.FileName;
-                pictureBox1.ImageLocation = imageLoaded;
+                //pictureBox1.ImageLocation = imageLoaded;
 
                 Bitmap originalImage = new Bitmap( imageLoaded );
 
@@ -121,8 +121,6 @@ namespace addWhiteSpace2
             String searchFolder = globalPath;
             var filters = new String[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg" };
             var files = GetFilesFrom(searchFolder, filters, false);
-
-
 
             foreach(var file in files)
             {
@@ -217,5 +215,138 @@ namespace addWhiteSpace2
 
             }
         }
+
+
+        string original_images_folder = @"C:\Users\Jens\Desktop\convert\original";
+        //string globalPathDestination = @"C:\Users\Jens\Desktop\convert\destination\";
+
+        Bitmap newImage;
+        private void button8_Click(object sender, EventArgs e)
+        {
+
+            OpenFileDialog folderBrowser = new OpenFileDialog();
+            // Set validate names and check file exists to false otherwise windows will
+            // not let you select "Folder Selection."
+            folderBrowser.ValidateNames = false;
+            folderBrowser.CheckFileExists = false;
+            folderBrowser.CheckPathExists = true;
+            // Always default to Folder Selection.
+            folderBrowser.FileName = "Folder Selection.";
+
+
+            // OPTIE 1
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                original_images_folder = Path.GetDirectoryName(folderBrowser.FileName);
+                // ...
+            }
+
+            // OPTIE 2
+            /*
+            FolderBrowserDialog diag = new FolderBrowserDialog();
+            if (diag.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string folder = diag.SelectedPath;  //selected folder path
+
+            }
+            */
+
+
+            // MOVE FILES TO ORIGINAL_IMAGES FOLDER
+            string folderNameOriginalImages = "original_images";
+            string folderNameNewImages = "new_images";
+
+            string insideFolderOriginalImagesFolder = original_images_folder + "\\" + folderNameOriginalImages;
+            string insideFolderNewImagesFolder = original_images_folder + "\\" + folderNameNewImages;
+
+
+            System.IO.Directory.CreateDirectory(String.Format(@"{0}/{1}", original_images_folder, folderNameOriginalImages));
+            System.IO.Directory.CreateDirectory(String.Format(@"{0}/{1}", original_images_folder, folderNameNewImages));
+
+            var diSource = new DirectoryInfo(original_images_folder);
+            var diTarget = new DirectoryInfo(insideFolderOriginalImagesFolder);
+
+            CopyAll(diSource, diTarget);
+
+
+            String searchFolder = insideFolderOriginalImagesFolder;
+                var filters = new String[] { "jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg" };
+                var files = GetFilesFrom(insideFolderOriginalImagesFolder, filters, false);
+
+
+                foreach (var file in files)
+                {
+                    Bitmap originalImage = new Bitmap(@"" + file + "");
+
+                    if ( originalImage.Width > originalImage.Height ) {
+
+                        var rest = originalImage.Width - originalImage.Height;
+                        var side = rest / 2;
+
+                        newImage = new Bitmap(originalImage.Width, (side + originalImage.Height + side));
+                    saveNewImage(file, originalImage, newImage, insideFolderOriginalImagesFolder, insideFolderNewImagesFolder);
+
+                }
+                else if ( originalImage.Width < originalImage.Height ) {
+                        var rest = originalImage.Height - originalImage.Width;
+                        var side = rest / 2;
+
+                        newImage = new Bitmap((side + originalImage.Width + side), originalImage.Height);
+
+
+                    saveNewImage(file, originalImage, newImage, insideFolderOriginalImagesFolder, insideFolderNewImagesFolder);
+                }
+                else { }
+
+
+
+            }
+        }
+
+
+
+
+        public static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        {
+            Directory.CreateDirectory(target.FullName);
+
+            // Copy each file into the new directory.
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                //Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
+                //fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+                fi.MoveTo(Path.Combine(target.FullName, fi.Name));
+            }
+
+
+            // Copy each subdirectory using recursion.
+            /*
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir =
+                    target.CreateSubdirectory(diSourceSubDir.Name);
+                CopyAll(diSourceSubDir, nextTargetSubDir);
+            }
+            */
+        }
+
+        private void saveNewImage(string file, Bitmap originalImage, Bitmap newImage, string originalPath, string newPath )
+        {
+            using (Graphics graphics = Graphics.FromImage(newImage))
+            {
+                graphics.Clear(Color.White);
+                int x = (newImage.Width - originalImage.Width) / 2;
+                int y = (newImage.Height - originalImage.Height) / 2;
+
+                graphics.DrawImage(originalImage, x, y);
+            }
+
+            string pathToFile = originalPath;
+            string fileName = file.Replace(pathToFile + "\\", "");
+            newImage.Save(newPath + "\\" + fileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+        }
+
+
     }
 }

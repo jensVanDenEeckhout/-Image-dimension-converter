@@ -1,0 +1,8 @@
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\bin\Release\addWhiteSpace2.exe.config
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\bin\Release\addWhiteSpace2.exe
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\bin\Release\addWhiteSpace2.pdb
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\obj\Release\addWhiteSpace2.Form1.resources
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\obj\Release\addWhiteSpace2.Properties.Resources.resources
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\obj\Release\addWhiteSpace2.csproj.GenerateResource.cache
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\obj\Release\addWhiteSpace2.exe
+C:\Users\Jens\Desktop\work_programming\programming\-Image-dimension-converter\addWhiteSpace2\obj\Release\addWhiteSpace2.pdb
